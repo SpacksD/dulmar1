@@ -1,0 +1,46 @@
+{
+  "name": "dulmar",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 3005",
+    "build": "next build --turbopack",
+    "start": "next start -p 3005",
+    "lint": "eslint",
+    "init-db": "node scripts/init-db.js",
+    "seed": "node scripts/seed.js",
+    "verify": "node scripts/verify-users.js",
+    "setup": "npm run init-db && npm run seed"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^4.3.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/multer": "^2.0.0",
+    "@types/nodemailer": "^7.0.1",
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.2.0",
+    "chart.js": "^4.5.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
+    "lucide-react": "^0.541.0",
+    "multer": "^2.0.2",
+    "next": "15.5.0",
+    "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
+    "react": "19.1.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
