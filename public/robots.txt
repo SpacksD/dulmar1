@@ -1,0 +1,25 @@
+# robots.txt para Centro Infantil DULMAR
+# Permite el acceso de todos los bots a las páginas públicas
+
+# Permitir acceso general
+User-agent: *
+Allow: /
+
+# Bloquear acceso a rutas administrativas y de usuario
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /auth/reset-password
+
+# Bloquear acceso a archivos privados
+Disallow: /private/
+Disallow: /_next/
+
+# Permitir explícitamente páginas importantes
+Allow: /servicios
+Allow: /contacto
+Allow: /login
+Allow: /register
+
+# Sitemap
+Sitemap: https://www.centrodulmar.com/sitemap.xml
