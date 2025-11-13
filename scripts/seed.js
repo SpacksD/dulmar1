@@ -25,7 +25,7 @@ async function seedDatabase() {
       adminPasswordHash,
       'Administrador',
       'DULMAR',
-      '+51987654321',
+      '+51993521250',
       'admin',
       1,
       1

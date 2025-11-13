@@ -107,9 +107,9 @@ export function generateSubscriptionConfirmationHTML(subscription: SubscriptionD
                 <p>Si tienes alguna pregunta o necesitas hacer algún cambio, no dudes en contactarnos:</p>
 
                 <ul>
-                    <li>📱 WhatsApp: <a href="https://wa.me/51987654321">+51 987 654 321</a></li>
-                    <li>📧 Email: info@centroinfantildulmar.com</li>
-                    <li>📞 Teléfono: +51 987 654 321</li>
+                    <li>📱 WhatsApp: <a href="https://wa.me/51993521250">+51 993 521 250</a></li>
+                    <li>📧 Email: centrodulmar@gmail.com</li>
+                    <li>📞 Teléfono: +51 993 521 250</li>
                 </ul>
 
                 <p>¡Esperamos comenzar esta hermosa experiencia de desarrollo y aprendizaje junto a ${subscription.child_name}!</p>
@@ -120,7 +120,7 @@ export function generateSubscriptionConfirmationHTML(subscription: SubscriptionD
 
             <div class="footer">
                 <p>Centro Infantil DULMAR - Brindamos seguridad, aprendizaje y salud infantil</p>
-                <p>Jr. Los Tulipanes 456, San Juan de Miraflores, Lima</p>
+                <p>Calle los rosales N° 125, Casa Grande - Ascope - la Libertad</p>
                 <p style="font-size: 12px; color: #666;">Este es un email automático, por favor no responder directamente.</p>
             </div>
         </div>
@@ -194,8 +194,8 @@ export function generateAppointmentConfirmationHTML(
 
                 <p>Para cualquier consulta o cambio, contáctanos:</p>
                 <ul>
-                    <li>📱 WhatsApp: <a href="https://wa.me/51987654321">+51 987 654 321</a></li>
-                    <li>📧 Email: info@centroinfantildulmar.com</li>
+                    <li>📱 WhatsApp: <a href="https://wa.me/51993521250">+51 993 521 250</a></li>
+                    <li>📧 Email: centrodulmar@gmail.com</li>
                 </ul>
 
                 <p>¡Esperamos ver a ${subscription.child_name} en sus sesiones!</p>
@@ -206,7 +206,7 @@ export function generateAppointmentConfirmationHTML(
 
             <div class="footer">
                 <p>Centro Infantil DULMAR - Brindamos seguridad, aprendizaje y salud infantil</p>
-                <p>Jr. Los Tulipanes 456, San Juan de Miraflores, Lima</p>
+                <p>Calle los rosales N° 125, Casa Grande - Ascope - la Libertad</p>
             </div>
         </div>
     </body>

@@ -113,7 +113,7 @@ export default function ServiceDetailPage() {
     email: "info@dulmar.com",
     horario: "Lunes a Viernes: 7:00 AM - 6:00 PM",
     direccion: "Av. Principal 123, Lima, Perú",
-    whatsapp: "51987654321",
+    whatsapp: "51993521250",
     directora: "Dra. María García"
   };
 

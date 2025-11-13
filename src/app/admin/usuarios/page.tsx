@@ -139,7 +139,7 @@ export default function UsuariosAdminPage() {
       email: 'admin@dulmar.com',
       first_name: 'Administrador',
       last_name: 'DULMAR',
-      phone: '+51987654321',
+      phone: '+51993521250',
       role: 'admin' as const,
       is_active: true,
       email_verified: true,

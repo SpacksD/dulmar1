@@ -421,7 +421,7 @@ export default function BookingForm({ service, onBookingSuccess, onCancel }: Boo
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 ${
                   errors.parent_phone ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="+51 987 654 321"
+                placeholder="+51 993 521 250"
               />
               {errors.parent_phone && (
                 <p className="text-red-600 text-sm mt-1">{errors.parent_phone}</p>

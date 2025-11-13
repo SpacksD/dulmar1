@@ -229,7 +229,7 @@ export default function MisServiciosPage() {
                         )}
                         
                         <a
-                          href={`https://wa.me/51987654321?text=${encodeURIComponent(`Consulta sobre el servicio: ${userService.service.name}`)}`}
+                          href={`https://wa.me/51993521250?text=${encodeURIComponent(`Consulta sobre el servicio: ${userService.service.name}`)}`}
                           target="_blank"
                           className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center"
                         >
@@ -313,7 +313,7 @@ export default function MisServiciosPage() {
                     </button>
                     
                     <a
-                      href={`https://wa.me/51987654321?text=${encodeURIComponent(`Consulta sobre el servicio: ${service.name}`)}`}
+                      href={`https://wa.me/51993521250?text=${encodeURIComponent(`Consulta sobre el servicio: ${service.name}`)}`}
                       target="_blank"
                       className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center"
                     >

@@ -45,11 +45,11 @@ export default function ContactoPage() {
   const parametros = {
     nombreEmpresa: "Centro Infantil DULMAR",
     slogan: "Brindamos seguridad, aprendizaje y salud infantil",
-    telefono: "+51 987 654 321",
-    email: "info@centroinfantildulmar.com",
+    telefono: "+51 993 521 250",
+    email: "centrodulmar@gmail.com",
     horario: "Lun - Vie: 7:00 AM - 6:00 PM | Sáb: 8:00 AM - 2:00 PM",
-    direccion: "Jr. Los Tulipanes 456, San Juan de Miraflores, Lima",
-    whatsapp: "51987654321",
+    direccion: "Calle los rosales N° 125, Casa Grande - Ascope - la Libertad",
+    whatsapp: "51993521250",
     directora: "Lic. María Elena Dulanto"
   };
 
