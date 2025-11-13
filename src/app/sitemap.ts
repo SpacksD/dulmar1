@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const services = db.prepare(`
       SELECT id, slug, updated_at
       FROM services
-      WHERE status = 'active'
+      WHERE is_active = 1
     `).all() as Array<{ id: number; slug: string; updated_at: string }>;
 
     // Agregar cada servicio al sitemap
