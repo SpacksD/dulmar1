@@ -16,7 +16,8 @@ import {
   X,
   CreditCard,
   FileText,
-  Clock
+  Clock,
+  UserCheck
 } from 'lucide-react';
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
@@ -58,7 +59,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const isAdmin = session.user.role === 'admin';
   const isStaff = session.user.role === 'staff';
 
-  const adminMenuItems = [
+  interface MenuItem {
+    href: string;
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    separator?: boolean;
+  }
+
+  const adminMenuItems: MenuItem[] = [
     { href: '/admin', icon: Home, label: 'Dashboard' },
     { href: '/admin/servicios', icon: Settings, label: 'Servicios' },
     { href: '/admin/promociones', icon: Gift, label: 'Promociones' },
@@ -67,16 +75,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { href: '/admin/pagos', icon: CreditCard, label: 'Pagos' },
     { href: '/admin/facturacion-mensual', icon: FileText, label: 'Facturación Mensual' },
     { href: '/admin/usuarios', icon: Users, label: 'Usuarios' },
+    { href: '/staff/attendance', icon: UserCheck, label: 'Gestión de Staff', separator: true },
   ];
 
-  const staffMenuItems = [
+  const staffMenuItems: MenuItem[] = [
     { href: '/admin', icon: Home, label: 'Dashboard' },
     { href: '/admin/servicios', icon: Settings, label: 'Servicios' },
     { href: '/admin/reservas', icon: Calendar, label: 'Reservas' },
     { href: '/admin/pagos', icon: CreditCard, label: 'Pagos' },
   ];
 
-  const parentMenuItems = [
+  const parentMenuItems: MenuItem[] = [
     { href: '/admin/mis-servicios', icon: Star, label: 'Mis Servicios' },
     { href: '/admin/mis-reservas', icon: Calendar, label: 'Mis Reservas' },
   ];
@@ -138,23 +147,29 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <nav className="px-3 py-4">
           <div className="space-y-1">
             {menuItems.map((item) => {
-              const isActive = pathname === item.href || 
+              const isActive = pathname === item.href ||
                 (item.href !== '/admin' && pathname.startsWith(item.href));
-              
+
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                    isActive
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.label}
-                </Link>
+                <div key={item.href}>
+                  {item.separator && (
+                    <div className="pt-4 pb-2">
+                      <div className="border-t border-gray-200"></div>
+                    </div>
+                  )}
+                  <Link
+                    href={item.href}
+                    className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      isActive
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <item.icon className="mr-3 h-5 w-5" />
+                    {item.label}
+                  </Link>
+                </div>
               );
             })}
           </div>

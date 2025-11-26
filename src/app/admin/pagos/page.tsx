@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import {
   CheckCircle,
   XCircle,
@@ -389,11 +388,10 @@ export default function AdminPagosPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Comprobante</label>
                     <div className="relative w-full" style={{ minHeight: '200px' }}>
-                      <Image
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={`/api${selectedPayment.payment_proof}`}
                         alt="Comprobante de pago"
-                        width={800}
-                        height={600}
                         className="max-w-full h-auto border border-gray-300 rounded-lg"
                         style={{ objectFit: 'contain' }}
                       />

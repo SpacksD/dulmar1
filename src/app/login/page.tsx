@@ -40,10 +40,12 @@ export default function LoginPage() {
         setError('Email o contraseña incorrectos');
       } else {
         const session = await getSession();
-        if (session?.user?.role === 'admin' || session?.user?.role === 'staff') {
+        if (session?.user?.role === 'admin') {
           router.push('/admin');
+        } else if (session?.user?.role === 'staff') {
+          router.push('/staff/dashboard');
         } else {
-          router.push('/');
+          router.push('/dashboard');
         }
       }
     } catch {

@@ -71,31 +71,39 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      console.log('=== AUTH SESSION CALLBACK ===');
-      console.log('Token:', token);
-      console.log('Session antes:', session);
+    //  console.log('=== AUTH SESSION CALLBACK ===');
+   //   console.log('Token:', token);
+    //  console.log('Session antes:', session);
 
       if (token && session.user?.email) {
         // Obtener el ID actual del usuario desde la base de datos
         const stmt = db.prepare('SELECT id, role FROM users WHERE email = ? AND is_active = 1');
         const user = stmt.get(session.user.email) as Pick<DbUser, 'id' | 'role'> | undefined;
 
-        console.log('Usuario de DB:', user);
+      //  console.log('Usuario de DB:', user);
 
         if (user) {
           session.user.id = user.id.toString();
           session.user.role = user.role;
-          console.log('Role asignado desde DB:', user.role);
+     //     console.log('Role asignado desde DB:', user.role);
         } else {
           session.user.id = token.sub!;
           session.user.role = token.role as string;
-          console.log('Role asignado desde token:', token.role);
+      //    console.log('Role asignado desde token:', token.role);
         }
       }
 
-      console.log('Session después:', session);
-      console.log('===============================');
+    //  console.log('Session después:', session);
+     // console.log('===============================');
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // Si la URL ya es absoluta y es del mismo dominio, permitirla
+      if (url.startsWith(baseUrl)) return url;
+      // Si es una ruta relativa, permitirla
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Por defecto, redirigir al baseUrl
+      return baseUrl;
     }
   },
   pages: {

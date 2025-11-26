@@ -186,9 +186,9 @@ function initializeDatabase() {
     createIndexes.forEach((index, i) => {
       db.exec(index);
     });
-    console.log('✓ Índices creados');
+  //  console.log('✓ Índices creados');
 
-    console.log('✅ Base de datos inicializada correctamente');
+   // console.log('✅ Base de datos inicializada correctamente');
     return true;
   } catch (error) {
     console.error('❌ Error al inicializar la base de datos:', error);
@@ -200,8 +200,8 @@ function initializeDatabase() {
 
 // Ejecutar inicialización
 if (initializeDatabase()) {
-  console.log('\n🎉 Base de datos lista para usar!');
-  console.log('Ahora puedes ejecutar: npm run seed');
+ // console.log('\n🎉 Base de datos lista para usar!');
+ // console.log('Ahora puedes ejecutar: npm run seed');
 } else {
   process.exit(1);
 }
