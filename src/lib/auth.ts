@@ -98,12 +98,24 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
+      // Si la URL es una ruta relativa, usarla directamente
+      if (url.startsWith('/')) return url;
+
       // Si la URL ya es absoluta y es del mismo dominio, permitirla
       if (url.startsWith(baseUrl)) return url;
-      // Si es una ruta relativa, permitirla
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      // Por defecto, redirigir al baseUrl
-      return baseUrl;
+
+      // Si la URL es localhost, extraer solo la ruta
+      try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') {
+          return urlObj.pathname + urlObj.search;
+        }
+      } catch (e) {
+        // Si no es una URL válida, continuar
+      }
+
+      // Por defecto, redirigir a la raíz
+      return '/';
     }
   },
   pages: {
