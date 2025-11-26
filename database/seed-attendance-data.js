@@ -134,7 +134,7 @@ try {
 
   console.log(`✓ Encontrados ${staffMembers.length} miembros del staff\n`);
 
-  // 2. Obtener sesiones recientes (últimos 7 días)
+  // 2. Obtener sesiones recientes (últimos 30 días)
   console.log('📋 Paso 2: Obteniendo sesiones recientes...');
 
   const sessions = db.prepare(`
@@ -150,13 +150,13 @@ try {
     FROM sessions s
     LEFT JOIN subscriptions sub ON s.subscription_id = sub.id
     LEFT JOIN child_profiles cp ON sub.id = cp.subscription_id
-    WHERE s.session_date >= DATE('now', '-7 days')
+    WHERE s.session_date >= DATE('now', '-30 days')
     AND s.session_date <= DATE('now')
     AND s.status != 'cancelled'
     ORDER BY s.session_date DESC, s.session_time
   `).all();
 
-  console.log(`✓ Encontradas ${sessions.length} sesiones en los últimos 7 días\n`);
+  console.log(`✓ Encontradas ${sessions.length} sesiones en los últimos 30 días\n`);
 
   if (sessions.length === 0) {
     console.log('⚠️  No hay sesiones recientes para generar datos.');
