@@ -141,10 +141,10 @@ try {
     SELECT
       s.id,
       s.session_date,
-      s.start_time,
-      s.end_time,
+      s.session_time,
+      s.duration_minutes,
       s.subscription_id,
-      s.staff_id,
+      s.conducted_by as staff_id,
       sub.child_name,
       cp.id as profile_id
     FROM sessions s
@@ -153,7 +153,7 @@ try {
     WHERE s.session_date >= DATE('now', '-7 days')
     AND s.session_date <= DATE('now')
     AND s.status != 'cancelled'
-    ORDER BY s.session_date DESC, s.start_time
+    ORDER BY s.session_date DESC, s.session_time
   `).all();
 
   console.log(`✓ Encontradas ${sessions.length} sesiones en los últimos 7 días\n`);
@@ -187,8 +187,13 @@ try {
       const isLate = Math.random() < 0.2; // 20% llegan tarde
       const lateMinutes = isLate ? Math.floor(Math.random() * 20) + 5 : 0;
 
-      const checkInTime = `${session.session_date} ${addMinutesToTime(session.start_time, isLate ? lateMinutes : -5)}`;
-      const checkOutTime = `${session.session_date} ${addMinutesToTime(session.end_time, Math.floor(Math.random() * 10) - 5)}`;
+      // Usar session_time como hora de inicio
+      const sessionTime = session.session_time || '09:00:00';
+      const durationMinutes = session.duration_minutes || 60;
+
+      // Calcular hora de salida sumando la duración
+      const checkInTime = `${session.session_date} ${addMinutesToTime(sessionTime, isLate ? lateMinutes : -5)}`;
+      const checkOutTime = `${session.session_date} ${addMinutesToTime(sessionTime, durationMinutes + Math.floor(Math.random() * 10) - 5)}`;
 
       const staffId = session.staff_id || getRandomElement(staffMembers).id;
 
