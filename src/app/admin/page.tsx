@@ -10,7 +10,8 @@ import {
   Eye,
   DollarSign,
   TrendingUp,
-  Activity
+  Activity,
+  RefreshCw
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -73,6 +74,8 @@ export default function AdminDashboard() {
   const { data: session } = useSession();
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [generatingSessions, setGeneratingSessions] = useState(false);
+  const [generateMessage, setGenerateMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     if (session?.user.role === 'admin') {
@@ -92,6 +95,47 @@ export default function AdminDashboard() {
       console.error('Error fetching analytics:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGenerateSessions = async () => {
+    if (!confirm('¿Estás seguro de que quieres generar sesiones para todas las subscripciones activas? Esto creará sesiones para los próximos 3 meses.')) {
+      return;
+    }
+
+    setGeneratingSessions(true);
+    setGenerateMessage(null);
+
+    try {
+      const response = await fetch('/api/admin/sessions/generate-all', {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setGenerateMessage({
+          type: 'success',
+          text: `✅ ${data.message}\n${data.data.subscriptions_processed} subscripciones procesadas, ${data.data.total_sessions_created} sesiones creadas.`
+        });
+        // Refresh analytics after generating sessions
+        fetchAnalytics();
+      } else {
+        setGenerateMessage({
+          type: 'error',
+          text: `❌ Error: ${data.error}`
+        });
+      }
+    } catch (error) {
+      console.error('Error generating sessions:', error);
+      setGenerateMessage({
+        type: 'error',
+        text: '❌ Error al generar sesiones. Por favor, intenta de nuevo.'
+      });
+    } finally {
+      setGeneratingSessions(false);
+      // Clear message after 5 seconds
+      setTimeout(() => setGenerateMessage(null), 5000);
     }
   };
 
@@ -446,6 +490,18 @@ export default function AdminDashboard() {
             {/* Quick Actions */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Acciones Rápidas</h3>
+
+              {/* Generate Sessions Message */}
+              {generateMessage && (
+                <div className={`mb-4 p-3 rounded-lg ${
+                  generateMessage.type === 'success'
+                    ? 'bg-green-50 border border-green-200 text-green-800'
+                    : 'bg-red-50 border border-red-200 text-red-800'
+                }`}>
+                  <p className="text-sm whitespace-pre-line">{generateMessage.text}</p>
+                </div>
+              )}
+
               <div className="space-y-3">
                 <Link
                   href="/admin/servicios"
@@ -478,6 +534,22 @@ export default function AdminDashboard() {
                   <Users className="h-5 w-5 text-gray-600 mr-3" />
                   <span className="text-gray-800">Gestionar Usuarios</span>
                 </Link>
+
+                {/* Generate Sessions Button */}
+                <button
+                  onClick={handleGenerateSessions}
+                  disabled={generatingSessions}
+                  className={`w-full flex items-center p-3 rounded-lg transition-colors ${
+                    generatingSessions
+                      ? 'bg-gray-200 cursor-not-allowed'
+                      : 'bg-blue-50 hover:bg-blue-100 border border-blue-200'
+                  }`}
+                >
+                  <RefreshCw className={`h-5 w-5 text-blue-600 mr-3 ${generatingSessions ? 'animate-spin' : ''}`} />
+                  <span className="text-blue-800 font-medium">
+                    {generatingSessions ? 'Generando sesiones...' : 'Generar Sesiones (3 meses)'}
+                  </span>
+                </button>
 
                 <a
                   href="/"

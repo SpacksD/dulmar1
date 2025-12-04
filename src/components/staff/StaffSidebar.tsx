@@ -23,7 +23,6 @@ export default function StaffSidebar({ user }: StaffSidebarProps) {
     { href: '/staff/dashboard', icon: Home, label: 'Dashboard', roles: ['staff'] },
     { href: '/staff/attendance', icon: CheckCircle, label: 'Asistencia', roles: ['staff', 'admin'] },
     { href: '/staff/children', icon: Users, label: 'Niños', roles: ['staff', 'admin'] },
-    { href: '/staff/schedule', icon: Calendar, label: 'Agenda', roles: ['staff'] },
   ];
 
   // Filter menu items based on user role

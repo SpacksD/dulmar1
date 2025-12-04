@@ -428,6 +428,35 @@ export async function POST(request: NextRequest) {
       discountAmount
     );
 
+    const subscriptionId = result.lastInsertRowid as number;
+
+    // Crear child_profile automáticamente
+    try {
+      const birthDate = new Date();
+      birthDate.setFullYear(birthDate.getFullYear() - data.child_age);
+      const birthDateStr = birthDate.toISOString().split('T')[0];
+
+      const createProfileStmt = db.prepare(`
+        INSERT INTO child_profiles (
+          subscription_id, birth_date, special_needs,
+          allergies, medical_conditions, medications,
+          emergency_contacts, updated_by
+        ) VALUES (?, ?, ?, '[]', '[]', '[]', '[]', ?)
+      `);
+
+      createProfileStmt.run(
+        subscriptionId,
+        birthDateStr,
+        data.special_requests || null,
+        session.user.id
+      );
+
+      console.log(`✅ Child profile creado automáticamente para subscripción ${subscriptionId}`);
+    } catch (error) {
+      console.error('Error creando child_profile:', error);
+      // No fallar la creación de la subscripción si hay error
+    }
+
     // Increment promotion usage if applicable
     if (promotionId) {
       db.prepare(`
@@ -477,7 +506,7 @@ export async function POST(request: NextRequest) {
       data.parent_phone,
       placeholderDate, // preferred_date (placeholder)
       placeholderTime, // preferred_time (placeholder)
-      result.lastInsertRowid,
+      subscriptionId,
       data.start_month,
       data.start_year,
       JSON.stringify(legacyPreferredDays), // preferred_days (para compatibilidad)
@@ -506,7 +535,7 @@ export async function POST(request: NextRequest) {
 
     const invoiceResult = invoiceStmt.run(
       invoiceNumber,
-      result.lastInsertRowid,
+      subscriptionId,
       session.user.id,
       'registration',
       data.start_month,
@@ -613,7 +642,7 @@ export async function POST(request: NextRequest) {
     }
 
     const subscription = {
-      id: Number(result.lastInsertRowid),
+      id: Number(subscriptionId),
       subscription_code: subscriptionCode,
       user_id: session.user.id,
       service_id: data.service_id,

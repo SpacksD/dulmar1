@@ -64,7 +64,7 @@ export function getAllChildProfiles(db: Database.Database): ChildProfile[] {
     FROM child_profiles cp
     LEFT JOIN subscriptions s ON cp.subscription_id = s.id
     LEFT JOIN users u ON s.user_id = u.id
-    WHERE s.status = 'active'
+    WHERE s.status IN ('pending', 'active')
     ORDER BY s.child_name ASC
   `);
 
@@ -320,8 +320,10 @@ export function getTodaySessions(db: Database.Database, staffId?: number) {
       AND s.status IN ('scheduled', 'confirmed')
   `;
 
+  // Solo filtrar por staff si está asignado Y existe un staffId
+  // Esto permite que staff vea todas las sesiones sin asignar
   if (staffId) {
-    query += ' AND s.conducted_by = ?';
+    query += ' AND (s.conducted_by = ? OR s.conducted_by IS NULL)';
   }
 
   query += ' ORDER BY s.session_time ASC';
@@ -468,8 +470,10 @@ export function getDashboardStats(db: Database.Database, staffId?: number): Dash
   let whereClause = 'WHERE s.session_date = ?';
   const params: (string | number)[] = [today];
 
+  // Solo filtrar por staff si está asignado Y existe un staffId
+  // Esto permite que staff vea todas las sesiones sin asignar
   if (staffId) {
-    whereClause += ' AND s.conducted_by = ?';
+    whereClause += ' AND (s.conducted_by = ? OR s.conducted_by IS NULL)';
     params.push(staffId);
   }
 
@@ -512,8 +516,10 @@ export function getDashboardAlerts(db: Database.Database, staffId?: number): Das
   let whereClause = 'WHERE s.session_date = ?';
   const params: (string | number)[] = [today];
 
+  // Solo filtrar por staff si está asignado Y existe un staffId
+  // Esto permite que staff vea todas las sesiones sin asignar
   if (staffId) {
-    whereClause += ' AND s.conducted_by = ?';
+    whereClause += ' AND (s.conducted_by = ? OR s.conducted_by IS NULL)';
     params.push(staffId);
   }
 
@@ -594,4 +600,158 @@ export function getDashboardAlerts(db: Database.Database, staffId?: number): Das
   });
 
   return alerts;
+}
+
+// =====================================================
+// SESSION GENERATION FUNCTIONS
+// =====================================================
+
+/**
+ * Función auxiliar para obtener todos los días de un mes que coinciden con un día de la semana
+ */
+function getDaysInMonth(year: number, month: number, dayOfWeek: number): number[] {
+  const dates: number[] = [];
+  const date = new Date(year, month - 1, 1);
+
+  while (date.getMonth() === month - 1) {
+    if (date.getDay() === dayOfWeek) {
+      dates.push(date.getDate());
+    }
+    date.setDate(date.getDate() + 1);
+  }
+
+  return dates;
+}
+
+/**
+ * Genera sesiones automáticamente para una subscripción basándose en su weekly_schedule
+ * @param db - Database instance
+ * @param subscriptionId - ID de la subscripción
+ * @returns Número de sesiones generadas
+ */
+export function generateSessionsForSubscription(
+  db: Database.Database,
+  subscriptionId: number
+): number {
+  // Obtener datos de la subscripción
+  const subscription = db.prepare(`
+    SELECT s.*, srv.duration as service_duration
+    FROM subscriptions s
+    LEFT JOIN services srv ON s.service_id = srv.id
+    WHERE s.id = ?
+  `).get(subscriptionId) as {
+    id: number;
+    weekly_schedule: string;
+    start_month: number;
+    start_year: number;
+    service_duration?: number;
+  } | undefined;
+
+  if (!subscription) {
+    console.warn(`Subscripción ${subscriptionId} no encontrada`);
+    return 0;
+  }
+
+  const weeklySchedule = JSON.parse(subscription.weekly_schedule || '{}') as Record<string, number | null>;
+  const sessions: Array<{
+    subscription_id: number;
+    session_date: string;
+    session_time: string;
+    session_number: number;
+    duration_minutes: number;
+    status: string;
+  }> = [];
+  const monthsToGenerate = 3;
+  let globalSessionNumber = 1;
+
+  for (let monthOffset = 0; monthOffset < monthsToGenerate; monthOffset++) {
+    let currentMonth = subscription.start_month + monthOffset;
+    let currentYear = subscription.start_year;
+
+    // Ajustar año si el mes excede 12
+    while (currentMonth > 12) {
+      currentMonth -= 12;
+      currentYear += 1;
+    }
+
+    const monthSessions: Array<{
+      subscription_id: number;
+      session_date: string;
+      session_time: string;
+      duration_minutes: number;
+      status: string;
+    }> = [];
+
+    // Horarios por defecto para cada día de la semana
+    const defaultTimeSlots: Record<number, string> = {
+      0: '09:00', // Domingo
+      1: '08:00', // Lunes
+      2: '08:00', // Martes
+      3: '09:00', // Miércoles
+      4: '08:00', // Jueves
+      5: '07:00', // Viernes
+      6: '09:00'  // Sábado
+    };
+
+    // Para cada día de la semana en el weekly_schedule
+    for (const [dayOfWeek, slotId] of Object.entries(weeklySchedule)) {
+      if (!slotId) continue;
+
+      // Usar horario por defecto basado en el día de la semana
+      const defaultTime = defaultTimeSlots[parseInt(dayOfWeek)] || '09:00';
+
+      // Obtener todos los días del mes que coinciden con este día de la semana
+      const daysInMonth = getDaysInMonth(currentYear, currentMonth, parseInt(dayOfWeek));
+
+      for (const day of daysInMonth) {
+        const sessionDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+        monthSessions.push({
+          subscription_id: subscriptionId,
+          session_date: sessionDate,
+          session_time: defaultTime,
+          duration_minutes: subscription.service_duration || 60,
+          status: 'scheduled'
+        });
+      }
+    }
+
+    // Ordenar sesiones del mes por fecha
+    monthSessions.sort((a, b) => a.session_date.localeCompare(b.session_date));
+
+    // Asignar números de sesión y agregar al array principal
+    monthSessions.forEach(session => {
+      sessions.push({ ...session, session_number: globalSessionNumber++ });
+    });
+  }
+
+  if (sessions.length === 0) {
+    console.warn(`No se generaron sesiones para subscripción ${subscriptionId}`);
+    return 0;
+  }
+
+  // Insertar todas las sesiones usando una transacción
+  const insertStmt = db.prepare(`
+    INSERT INTO sessions (
+      subscription_id, session_date, session_time,
+      session_number, duration_minutes, status
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `);
+
+  const insertMany = db.transaction((sessionsToInsert: typeof sessions) => {
+    for (const session of sessionsToInsert) {
+      insertStmt.run(
+        session.subscription_id,
+        session.session_date,
+        session.session_time,
+        session.session_number,
+        session.duration_minutes,
+        session.status
+      );
+    }
+  });
+
+  insertMany(sessions);
+
+  return sessions.length;
 }

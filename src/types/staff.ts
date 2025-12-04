@@ -220,7 +220,7 @@ export interface DashboardStats {
 }
 
 export interface DashboardAlert {
-  type: 'medical' | 'behavioral' | 'schedule' | 'general';
+  type: 'medical' | 'behavioral' | 'general';
   severity: 'high' | 'medium' | 'low';
   message: string;
   child_name?: string;

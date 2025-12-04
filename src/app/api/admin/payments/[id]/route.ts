@@ -96,6 +96,22 @@ export async function PUT(
 
       subscriptionStmt.run(payment.invoice_id);
 
+      // Generar sessions automáticamente para la subscripción activada
+      const subscriptionData = db.prepare(`
+        SELECT subscription_id FROM invoices WHERE id = ?
+      `).get(payment.invoice_id) as { subscription_id: number } | undefined;
+
+      if (subscriptionData?.subscription_id) {
+        try {
+          const { generateSessionsForSubscription } = await import('@/lib/db-staff');
+          const sessionsCreated = generateSessionsForSubscription(db, subscriptionData.subscription_id);
+          console.log(`✅ ${sessionsCreated} sesiones generadas para subscripción ${subscriptionData.subscription_id}`);
+        } catch (error) {
+          console.error('Error generando sesiones:', error);
+          // No fallar la verificación del pago si hay error
+        }
+      }
+
       // Also update the booking status if it exists
       const bookingStmt = db.prepare(`
         UPDATE bookings

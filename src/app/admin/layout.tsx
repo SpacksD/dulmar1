@@ -70,7 +70,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { href: '/admin', icon: Home, label: 'Dashboard' },
     { href: '/admin/servicios', icon: Settings, label: 'Servicios' },
     { href: '/admin/promociones', icon: Gift, label: 'Promociones' },
-    { href: '/admin/horarios', icon: Clock, label: 'Gestión de Horarios' },
     { href: '/admin/reservas', icon: Calendar, label: 'Reservas' },
     { href: '/admin/pagos', icon: CreditCard, label: 'Pagos' },
     { href: '/admin/facturacion-mensual', icon: FileText, label: 'Facturación Mensual' },

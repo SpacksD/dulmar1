@@ -27,7 +27,7 @@ interface DashboardStats {
 }
 
 interface Alert {
-  type: 'medical' | 'behavioral' | 'schedule' | 'general';
+  type: 'medical' | 'behavioral' | 'general';
   severity: 'high' | 'medium' | 'low';
   message: string;
   child_name?: string;
@@ -93,7 +93,6 @@ export default function DashboardPage() {
     switch (type) {
       case 'medical': return '🏥';
       case 'behavioral': return '⚠️';
-      case 'schedule': return '📅';
       default: return '📌';
     }
   };
@@ -295,19 +294,6 @@ export default function DashboardPage() {
             <div>
               <p className="font-medium text-purple-900">Perfiles de Niños</p>
               <p className="text-sm text-purple-700">Ver información y observaciones</p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          href="/staff/schedule"
-          className="p-4 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition-colors"
-        >
-          <div className="flex items-center space-x-3">
-            <Calendar className="h-6 w-6 text-green-600" />
-            <div>
-              <p className="font-medium text-green-900">Mi Agenda</p>
-              <p className="text-sm text-green-700">Ver horarios y sesiones</p>
             </div>
           </div>
         </Link>
