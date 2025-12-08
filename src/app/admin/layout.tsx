@@ -73,6 +73,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { href: '/admin/reservas', icon: Calendar, label: 'Reservas' },
     { href: '/admin/pagos', icon: CreditCard, label: 'Pagos' },
     { href: '/admin/facturacion-mensual', icon: FileText, label: 'Facturación Mensual' },
+    { href: '/admin/horarios', icon: Clock, label: 'Horarios' },
     { href: '/admin/usuarios', icon: Users, label: 'Usuarios' },
     { href: '/staff/attendance', icon: UserCheck, label: 'Gestión de Staff', separator: true },
   ];
