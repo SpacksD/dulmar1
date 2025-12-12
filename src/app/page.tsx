@@ -8,6 +8,7 @@ import ServiceCard from './components/TarjetaServicios';
 import TestimonialsSection from './components/Testimonios';
 import WhyChooseDulmar from './components/Porque';
 import PromotionsModal, { FloatingPromotionsButton } from './components/PromotionsModal';
+import ChristmasDecoration from './components/ChristmasDecoration';
 import Link from 'next/link';
 
 interface Service {
@@ -94,35 +95,58 @@ export default function Home() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fefefe' }}>
+      <ChristmasDecoration />
       <Navbar />
-      
+
       {/* Hero Section */}
-      <section 
-        className="relative min-h-[80vh] flex items-center justify-center text-white"
+      <section
+        className="relative min-h-[80vh] flex items-center justify-center text-white overflow-hidden"
         style={{
-          backgroundImage: 'url(/img/bg.jpg)',
+          backgroundImage: 'url(/img/bg_navideño.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
         }}
       >
+        {/* Christmas Lights */}
+        <div className="absolute top-0 left-0 right-0 h-12 flex justify-around items-center z-10">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="w-3 h-3 rounded-full animate-pulse"
+              style={{
+                backgroundColor: ['#ff0000', '#00ff00', '#ffff00', '#0000ff', '#ff00ff'][i % 5],
+                animationDelay: `${i * 0.2}s`,
+                boxShadow: `0 0 10px ${['#ff0000', '#00ff00', '#ffff00', '#0000ff', '#ff00ff'][i % 5]}`,
+              }}
+            />
+          ))}
+        </div>
+
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/70 to-indigo-900/70"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <div className="mb-8 flex justify-center">
-              <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30">
+              <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 relative">
+                <div className="absolute -top-3 -right-3 text-3xl animate-bounce">🎅</div>
+                <div className="absolute -bottom-3 -left-3 text-2xl animate-pulse">🎄</div>
                 <div className="text-6xl mb-2">🏰</div>
                 <div className="text-2xl font-bold">DULMAR</div>
                 <div className="text-sm opacity-90">Centro Infantil</div>
               </div>
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Centro Infantil <span className="text-blue-200">DULMAR</span>
+              <span className="inline-block animate-pulse">🎅</span>
+              {' '}Centro Infantil <span className="text-blue-200">DULMAR</span>{' '}
+              <span className="inline-block animate-bounce">🎄</span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl mb-4 text-blue-100 max-w-3xl mx-auto">
               {parametros.slogan}
+            </p>
+            <p className="text-2xl font-bold text-yellow-300 mb-8 animate-pulse">
+              🎁 ¡Feliz Navidad 2025! 🎁
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link 
@@ -146,12 +170,44 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Banner Navideño */}
+      <div className="bg-gradient-to-r from-red-600 via-green-600 to-red-600 py-3 text-center">
+        <p className="text-white font-bold text-lg animate-pulse">
+          ⭐ ESPECIAL NAVIDAD: ¡Consulta nuestras promociones navideñas! ⭐
+        </p>
+      </div>
+
       {/* Servicios Destacados */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 relative overflow-hidden" style={{
+        background: 'linear-gradient(180deg, #f0f9ff 0%, #ffffff 50%, #fef3c7 100%)'
+      }}>
+        {/* Christmas decorations - MÁS ELEMENTOS */}
+        <div className="absolute top-10 left-10 text-6xl opacity-30 animate-bounce">🎁</div>
+        <div className="absolute top-10 right-10 text-6xl opacity-30 animate-pulse">⭐</div>
+        <div className="absolute top-1/3 left-5 text-7xl opacity-25 animate-bounce" style={{ animationDelay: '0.3s' }}>🎅</div>
+        <div className="absolute top-1/3 right-5 text-7xl opacity-25 animate-pulse" style={{ animationDelay: '0.6s' }}>🎄</div>
+        <div className="absolute bottom-10 left-1/4 text-5xl opacity-30 animate-bounce" style={{ animationDelay: '0.5s' }}>🔔</div>
+        <div className="absolute bottom-10 right-1/4 text-5xl opacity-30 animate-pulse" style={{ animationDelay: '1s' }}>🎀</div>
+        <div className="absolute top-1/2 left-1/3 text-4xl opacity-20 animate-spin" style={{ animationDuration: '10s' }}>❄️</div>
+        <div className="absolute top-2/3 right-1/3 text-4xl opacity-20 animate-spin" style={{ animationDuration: '12s' }}>❄️</div>
+        <div className="absolute bottom-1/4 left-1/2 text-5xl opacity-25 animate-bounce" style={{ animationDelay: '0.8s' }}>🎁</div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Servicios Destacados
+            <div className="inline-block mb-4">
+              <div className="flex items-center gap-3 bg-gradient-to-r from-red-500 to-green-500 text-white px-8 py-3 rounded-full shadow-lg">
+                <span className="text-2xl animate-spin" style={{ animationDuration: '3s' }}>⭐</span>
+                <span className="font-bold text-xl">TEMPORADA NAVIDEÑA</span>
+                <span className="text-2xl animate-spin" style={{ animationDuration: '3s', animationDirection: 'reverse' }}>⭐</span>
+              </div>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{
+              background: 'linear-gradient(to right, #dc2626, #16a34a, #dc2626)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              🎄 Servicios Destacados 🎄
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Programas diseñados especialmente para el desarrollo integral de tu pequeño

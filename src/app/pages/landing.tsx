@@ -427,7 +427,7 @@ const DulmarLandingPage: React.FC = () => {
       <section 
         className="relative min-h-[80vh] flex items-center justify-center text-white"
         style={{
-          backgroundImage: 'url(/img/bg.jpg)',
+          backgroundImage: 'url(/img/bg_navideño.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'

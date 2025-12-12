@@ -449,7 +449,7 @@ export default function RegisterPage() {
 
         <div className="text-center mt-8">
           <p className="text-sm text-gray-500">
-            © 2024 Centro Infantil DULMAR. Todos los derechos reservados.
+            © 2025 Centro Infantil DULMAR. Todos los derechos reservados.
           </p>
         </div>
       </div>
