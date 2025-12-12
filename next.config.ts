@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // Deshabilitar optimización de imágenes si sharp no funciona en el servidor
+    unoptimized: process.env.DISABLE_IMAGE_OPTIMIZATION === 'true',
+
     // Configuración de optimización de imágenes
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
