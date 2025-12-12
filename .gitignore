@@ -40,15 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# database files
-*.db
-*.db-shm
-*.db-wal
-*.sqlite
-*.sqlite3
-database/*.db
-database/*.db-shm
-database/*.db-wal
+# database files (commented to allow syncing to production)
+# *.db
+# *.db-shm
+# *.db-wal
+# *.sqlite
+# *.sqlite3
+# database/*.db
+# database/*.db-shm
+# database/*.db-wal
 
 # uploads
 /uploads
